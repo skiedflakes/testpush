@@ -1,23 +1,22 @@
-name: Deploy to SSH Server
-
-on:
+on: 
   push:
     branches:
-      - main # Change this to your preferred branch name
-
+      - main
+name: Deploy Stagiong
 jobs:
-  deploy:
-    runs-on: [self-hosted, rocky-linux-9] # Use the correct label for Rocky Linux 9
-
+    deploy_job:
+    runs-on: ubuntu-latest
+    name: deploy
     steps:
-      - name: Checkout code
+        - name: Checkout
         uses: actions/checkout@v2
-
-      - name: Push to SSH Server
-        env:
-          SSH_USERNAME: ${{ secrets.SSH_USERNAME }}
-          SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
-          SSH_PORT: 9922 
-        run: |
-          dnf -y install sshpass # Use 'yum' instead if 'dnf' is not available
-          sshpass -p $SSH_PASSWORD ssh -p $SSH_PORT ${SSH_USERNAME}@sftp://202.52.172.194 "cd ../var/www/staging.bacolodcity.gov.ph/testpush && git pull origin main" # Adjust the path and branch name as needed
+        - name: Deploy file
+        uses: wlixcc/SFTP-Deploy-Action@v1.2.4
+        with:
+            username: ${{ secrets.SSH_USERNAME }}
+            server: ${{ secrets.SSH_SERVER }}
+            port: ${{ secrets.PORT }}
+            local_path: './static/*'
+            remote_path: '../var/www/staging.bacolodcity.gov.ph/testpush'
+            sftp_only: true
+            password: ${{ secrets.SSH_PASSWORD }}
