@@ -17,6 +17,7 @@ jobs:
         env:
           SSH_USERNAME: ${{ secrets.SSH_USERNAME }}
           SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
+          SSH_PORT: 9922 
         run: |
           dnf -y install sshpass # Use 'yum' instead if 'dnf' is not available
-          sshpass -p $SSH_PASSWORD ssh ${SSH_USERNAME}@your-ssh-server "cd ../var/www/staging.bacolodcity.gov.ph/testpush && git pull origin main" # Adjust the path and branch name as needed
+          sshpass -p $SSH_PASSWORD ssh -p $SSH_PORT ${SSH_USERNAME}@sftp://202.52.172.194 "cd ../var/www/staging.bacolodcity.gov.ph/testpush && git pull origin main" # Adjust the path and branch name as needed
