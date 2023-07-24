@@ -1,0 +1,22 @@
+name: Deploy to SSH Server
+
+on:
+  push:
+    branches:
+      - main # Change this to your preferred branch name
+
+jobs:
+  deploy:
+    runs-on: [self-hosted, rocky-linux-9] # Use the correct label for Rocky Linux 9
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Push to SSH Server
+        env:
+          SSH_USERNAME: ${{ secrets.SSH_USERNAME }}
+          SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
+        run: |
+          dnf -y install sshpass # Use 'yum' instead if 'dnf' is not available
+          sshpass -p $SSH_PASSWORD ssh ${SSH_USERNAME}@your-ssh-server "cd ../var/www/staging.bacolodcity.gov.ph/testpush && git pull origin main" # Adjust the path and branch name as needed
