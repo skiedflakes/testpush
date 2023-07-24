@@ -7,7 +7,8 @@ on:
 
 jobs:
   deploy:
-       runs-on: ubuntu-latest
+    runs-on: [self-hosted, rocky-linux-9] # Use the correct label for Rocky Linux 9
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
